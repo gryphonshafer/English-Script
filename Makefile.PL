@@ -17,6 +17,9 @@ my %WriteMakefileArgs = (
   "MIN_PERL_VERSION" => "5.014",
   "NAME" => "English::Script",
   "PREREQ_PM" => {
+    "Carp" => 0,
+    "Parse::RecDescent" => 0,
+    "YAML::XS" => 0,
     "strict" => 0,
     "warnings" => 0
   },
@@ -35,11 +38,14 @@ my %WriteMakefileArgs = (
 
 
 my %FallbackPrereqs = (
+  "Carp" => 0,
   "File::Spec" => 0,
   "IO::Handle" => 0,
   "IPC::Open3" => 0,
+  "Parse::RecDescent" => 0,
   "Test::More" => 0,
   "Test::Most" => 0,
+  "YAML::XS" => 0,
   "strict" => 0,
   "warnings" => 0
 );

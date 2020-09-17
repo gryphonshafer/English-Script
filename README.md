@@ -16,22 +16,24 @@ version 0.001
     my $js = English::Script->new->parse('Set the answer to 42.')->render;
 
     $es = English::Script->new(
-        grammar  => '# grammar',
-        renderer => 'JavaScript',
+        grammar     => '# grammar',
+        renderer    => 'JavaScript',
+        render_args => {},
     );
 
     my $grammar  = $es->grammar('# set grammar');
     $es          = $es->append_grammar('# append grammar');
     my $renderer = $es->renderer('JavaScript');
+    $renderer    = $es->renderer( 'JavaScript', {} );
 
     $es = $es->parse('Set the answer to 42.');
 
     my $data = $es->data;
     my $yaml = $es->yaml;
 
-    my $js = $es->render;
-    $js    = $es->render('JavaScript');
-    $js    = $es->render( 'JavaScript', {} );
+    $js = $es->render;
+    $js = $es->render('JavaScript');
+    $js = $es->render( 'JavaScript', {} );
 
 # DESCRIPTION
 
@@ -49,19 +51,51 @@ The following are the methods of the module.
 
 ## new
 
+TODO...
+
 ## parse
+
+TODO...
 
 ## render
 
+TODO...
+
 ## grammar
+
+TODO...
 
 ## append\_grammar
 
+TODO...
+
 ## renderer
+
+TODO...
 
 ## data
 
+TODO...
+
 ## yaml
+
+TODO...
+
+## prepare\_input
+
+TODO...
+
+## parse\_prepared\_input
+
+TODO...
+
+# DEFAULT GRAMMAR
+
+TODO...
+
+# LANGUAGE RENDERER MODULES
+
+TODO...
 
 # SEE ALSO
 
