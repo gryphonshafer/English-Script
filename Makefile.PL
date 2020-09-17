@@ -7,37 +7,27 @@ use 5.014;
 use ExtUtils::MakeMaker;
 
 my %WriteMakefileArgs = (
-  "ABSTRACT" => "Multi-purpose emailer for HTML, auto-text, attachments, and templates",
+  "ABSTRACT" => "Parse English subset and convert to data or code",
   "AUTHOR" => "Gryphon Shafer <gryphon\@cpan.org>",
   "CONFIGURE_REQUIRES" => {
     "ExtUtils::MakeMaker" => 0
   },
-  "DISTNAME" => "Email-Mailer",
+  "DISTNAME" => "English-Script",
   "LICENSE" => "perl",
   "MIN_PERL_VERSION" => "5.014",
-  "NAME" => "Email::Mailer",
+  "NAME" => "English::Script",
   "PREREQ_PM" => {
-    "Email::MIME" => "1.940",
-    "Email::MIME::CreateHTML" => 0,
-    "Email::MessageID" => 0,
-    "Email::Sender::Simple" => 0,
-    "HTML::FormatText" => 0,
-    "HTML::TreeBuilder" => 0,
-    "IO::All" => 0,
-    "MIME::Words" => 0,
     "strict" => 0,
     "warnings" => 0
   },
   "TEST_REQUIRES" => {
-    "File::Basename" => 0,
     "File::Spec" => 0,
     "IO::Handle" => 0,
     "IPC::Open3" => 0,
-    "Test::MockObject" => 0,
     "Test::More" => 0,
     "Test::Most" => 0
   },
-  "VERSION" => "1.15",
+  "VERSION" => "0.001",
   "test" => {
     "TESTS" => "t/*.t"
   }
@@ -45,19 +35,9 @@ my %WriteMakefileArgs = (
 
 
 my %FallbackPrereqs = (
-  "Email::MIME" => "1.940",
-  "Email::MIME::CreateHTML" => 0,
-  "Email::MessageID" => 0,
-  "Email::Sender::Simple" => 0,
-  "File::Basename" => 0,
   "File::Spec" => 0,
-  "HTML::FormatText" => 0,
-  "HTML::TreeBuilder" => 0,
-  "IO::All" => 0,
   "IO::Handle" => 0,
   "IPC::Open3" => 0,
-  "MIME::Words" => 0,
-  "Test::MockObject" => 0,
   "Test::More" => 0,
   "Test::Most" => 0,
   "strict" => 0,
