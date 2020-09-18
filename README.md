@@ -15,7 +15,7 @@ version 1.01
 
     my $js = English::Script->new->parse('Set the answer to 42.')->render;
 
-    $es = English::Script->new(
+    my $es = English::Script->new(
         grammar     => '# grammar',
         renderer    => 'JavaScript',
         render_args => {},
