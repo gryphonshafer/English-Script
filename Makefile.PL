@@ -18,6 +18,7 @@ my %WriteMakefileArgs = (
   "NAME" => "English::Script",
   "PREREQ_PM" => {
     "Carp" => 0,
+    "JavaScript::Packer" => 0,
     "Parse::RecDescent" => 0,
     "YAML::XS" => 0,
     "strict" => 0,
@@ -30,9 +31,9 @@ my %WriteMakefileArgs = (
     "Test::More" => 0,
     "Test::Most" => 0
   },
-  "VERSION" => "0.001",
+  "VERSION" => "1.01",
   "test" => {
-    "TESTS" => "t/*.t"
+    "TESTS" => "t/*.t t/javascript/*.t"
   }
 );
 
@@ -42,6 +43,7 @@ my %FallbackPrereqs = (
   "File::Spec" => 0,
   "IO::Handle" => 0,
   "IPC::Open3" => 0,
+  "JavaScript::Packer" => 0,
   "Parse::RecDescent" => 0,
   "Test::More" => 0,
   "Test::Most" => 0,
