@@ -388,7 +388,8 @@ package English::Script::JavaScript {
 
         return join( "\n", (
             map {
-                'if ( typeof( ' . $_ . ' ) == "undefined" ) var ' . $_ . ' = {};'
+                'if ( typeof( ' . $_ . ' ) == "undefined" ) var ' . $_ .
+                    ( ( $self->{objects}{$_} ) ? ' = ' . $self->{objects}{$_} : '' ) . ';'
             } sort keys %{ $self->{objects} }
         ), $text );
     }
@@ -409,7 +410,6 @@ package English::Script::JavaScript {
 
         my ($command_name) = keys %$command;
         my $tree           = $command->{$command_name};
-        my $types          = {};
 
         if ( $command_name eq 'say' ) {
             return join( ' ',
@@ -421,7 +421,7 @@ package English::Script::JavaScript {
         }
         elsif ( $command_name eq 'set' ) {
             my $object = $self->object( $tree->[0]{object} );
-            ( $types->{$object} ) = keys %{ $tree->[1] };
+            $self->{objects}{$object} = '[]' if ( exists $tree->[1]{list} );
 
             return join( ' ',
                 $object, '=', (
@@ -433,20 +433,18 @@ package English::Script::JavaScript {
             ) . ";\n";
         }
         elsif ( $command_name eq 'append' ) {
-            my $object        = $self->object( $tree->[1]{object} );
-            my ($type)        = keys %{ $tree->[0] };
-            my $obj_is_a_list = ( $types->{$object} and $types->{$object} eq 'list' ) ? 1 : 0;
+            my $object_core   = $self->object_core( $tree->[1]{object} );
+            my $object        = $self->object_calls( $tree->[1]{object}, $object_core );
+            my $obj_is_a_list = ( $self->{objects}{$object} and $self->{objects}{$object} eq '[]' ) ? 1 : 0;
+            my @predicate     =
+                ( exists $tree->[0]{list}       ) ? $self->list( $tree->[0]{list} )             :
+                ( exists $tree->[0]{expression} ) ? $self->expression( $tree->[0]{expression} ) : '';
 
-            return join( ' ',
-                ( $obj_is_a_list and $type eq 'list' ) ?
-                    ( $object . '.push(', $self->list( $tree->[0]{list} ), ')' ) :
-                ( not $obj_is_a_list and $type ne 'list' ) ?
-                    ( $object, '+=', $self->expression( $tree->[0]{expression} ) ) :
-                ( not $obj_is_a_list and $type eq 'list' ) ?
-                    ( $object . '= [', $object . ', ', $self->list( $tree->[0]{list} ), ']' ) :
-                ( $obj_is_a_list and $type ne 'list' ) ?
-                    ( $object . '.push(', $self->expression( $tree->[0]{expression} ), ')' ) : ()
-            ) . ";\n";
+            return join( ' ', (
+                ($obj_is_a_list)
+                    ? ( $object . '.push(', @predicate, ')' )
+                    : ( $object, '+=', @predicate )
+            ) ) . ";\n";
         }
         elsif ( $command_name eq 'add' ) {
             return join( ' ',
@@ -469,7 +467,7 @@ package English::Script::JavaScript {
             ) . ";\n";
         }
         elsif ( $command_name eq 'if' ) {
-            return 'if ( ' . $self->expression( $tree->{expression} ) . " ) {\n" . join( ' ', (
+            return 'if ( ' . join( ' ', $self->expression( $tree->{expression} ) ) . " ) {\n" . join( ' ', (
                 ( exists $tree->{command} ) ? $self->command( $tree->{command} ) :
                 ( exists $tree->{block}   ) ? $self->block( $tree->{block}     ) : ''
             ) ) . "}\n";
@@ -484,7 +482,7 @@ package English::Script::JavaScript {
             my $item = $self->object( $tree->{item}{object} );
             my $list = $self->object( $tree->{list}{object} );
 
-            return 'for ( const ' . $item . ' of ' . $list . " ) {\n" . join( ' ', (
+            return 'for ( ' . $item . ' of ' . $list . " ) {\n" . join( ' ', (
                 $self->block( $tree->{block} )
             ) ) . "}\n";
         }
@@ -510,26 +508,83 @@ package English::Script::JavaScript {
     sub expression {
         my ( $self, $expression ) = @_;
 
-        return map {
-            ( exists ( $_->{object} ) ) ? $self->object( $_->{object} ) : $_->{operator}
+        my @parts = map {
+            ( exists ( $_->{object} ) ) ? +{ object => $self->object( $_->{object} ) } : +{%$_};
         } @$expression;
+
+        for ( my $i = 0; $i < @parts; $i++ ) {
+            if (
+                exists $parts[$i]{operator} and (
+                    $parts[$i]{operator} eq 'in' or
+                    $parts[$i]{operator} eq 'not in' or
+                    $parts[$i]{operator} eq 'begins' or
+                    $parts[$i]{operator} eq 'not begins'
+                )
+            ) {
+                $parts[ $i - 1 ]{object} =
+                    $parts[ $i + 1 ]{object} . '.indexOf( ' . $parts[ $i - 1 ]{object} . ' )';
+
+                if ( $parts[$i]{operator} eq 'in' ) {
+                    $parts[$i]{operator}     = '>';
+                    $parts[ $i + 1 ]{object} = -1;
+                }
+                elsif ( $parts[$i]{operator} eq 'not in' ) {
+                    $parts[$i]{operator}     = '==';
+                    $parts[ $i + 1 ]{object} = -1;
+                }
+                elsif ( $parts[$i]{operator} eq 'begins' ) {
+                    $parts[$i]{operator}     = '==';
+                    $parts[ $i + 1 ]{object} = 0;
+                }
+                elsif ( $parts[$i]{operator} eq 'not begins' ) {
+                    $parts[$i]{operator}     = '!=';
+                    $parts[ $i + 1 ]{object} = 0;
+                }
+            }
+        }
+
+        return map { ( exists $_->{object} ) ? $_->{object} : $_->{operator} } @parts;
     }
 
     sub object {
         my ( $self, $object ) = @_;
-        my $text = '';
+        return $self->object_calls( $object, $self->object_core($object) );
+    }
 
+    sub object_core {
+        my ( $self, $object ) = @_;
+
+        my $text = '';
         if ( exists $object->{components} ) {
-            unless ( $object->{components}[0]{string} ) {
-                $text .= join( '.', map { values %$_ } @{ $object->{components} } );
-                $self->{objects}{$text} = 1
-                    if ( grep { not exists $_->{number} } @{ $object->{components} } );
+            if ( $object->{components}[0]{boolean} ) {
+                $text .= join( ' ', map { values %$_ } @{ $object->{components} } );
+            }
+            elsif ( not $object->{components}[0]{string} ) {
+                my $contains_non_number = grep { not exists $_->{number} } @{ $object->{components} };
+                $object->{components}[0] = { word => '_' . $object->{components}[0]{number} }
+                    if ( $contains_non_number and exists $object->{components}[0]{number} );
+
+                my @parts = map { values %$_ } @{ $object->{components} };
+                $text .= join( '.', @parts );
+
+                if ($contains_non_number) {
+                    for ( my $i = 0; $i < @parts; $i++ ) {
+                        $self->{objects}{ join( '.', @parts[ 0 .. $i ] ) } //= ( $i == @parts - 1 ) ? '' : '{}';
+                    }
+                }
             }
             else {
                 $text .= '"' . join( '', map { values %$_ } @{ $object->{components} } ) . '"';
             }
         }
 
+        return $text;
+    }
+
+    sub object_calls {
+        my ( $self, $object, $text ) = @_;
+
+        my $object_text = $text;
         if ( exists $object->{calls} ) {
             for my $call ( reverse map { values %$_ } @{ $object->{calls} } ) {
                 if ( $call eq 'length' ) {
@@ -537,6 +592,7 @@ package English::Script::JavaScript {
                 }
                 elsif ( $call eq 'shift' ) {
                     $text .= '.shift';
+                    $self->{objects}{$object_text} = '[]';
                 }
                 elsif ( ref $call eq 'HASH' and exists $call->{item} ) {
                     $text .= '[' . ( $call->{item} - 1 ) . ']';
