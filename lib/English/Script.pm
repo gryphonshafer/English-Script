@@ -192,7 +192,7 @@ package English::Script {
 
     sub append_grammar {
         my ( $self, $grammar ) = @_;
-        $self->{grammar} .= $grammar if ($grammar);
+        $self->{grammar} .= "\n" . $grammar if ($grammar);
         return $self;
     }
 
@@ -286,7 +286,7 @@ package English::Script {
 
         $input =~ s/(?:,\s*)?\bthen\b/ ::/g;
         $input =~ s/(?:,\s*)?\bapply\b[\w\s]+\bblock\b\s*\./ {{{ /g;
-        $input =~ s/[^\.]+\bend[\w\s]+\bblock\b/ }}} /g;
+        $input =~ s/[^\.\)]+\bend[\w\s]+\bblock\b/ }}} /g;
 
         $input =~ s/\bitem\s*([\d,\.]+)(?:\s*of)?/\[$1\]/g;
         $input =~ s/\((\d+)\)/'(' . $bits->{comments}[$1] . ')'/ge;
@@ -513,30 +513,28 @@ package English::Script::JavaScript {
         } @$expression;
 
         for ( my $i = 0; $i < @parts; $i++ ) {
-            if (
-                exists $parts[$i]{operator} and (
-                    $parts[$i]{operator} eq 'in' or
-                    $parts[$i]{operator} eq 'not in' or
-                    $parts[$i]{operator} eq 'begins' or
-                    $parts[$i]{operator} eq 'not begins'
-                )
-            ) {
-                $parts[ $i - 1 ]{object} =
-                    $parts[ $i + 1 ]{object} . '.indexOf( ' . $parts[ $i - 1 ]{object} . ' )';
-
+            if ( exists $parts[$i]{operator} ) {
                 if ( $parts[$i]{operator} eq 'in' ) {
+                    $parts[ $i - 1 ]{object} =
+                        $parts[ $i + 1 ]{object} . '.indexOf( ' . $parts[ $i - 1 ]{object} . ' )';
                     $parts[$i]{operator}     = '>';
                     $parts[ $i + 1 ]{object} = -1;
                 }
                 elsif ( $parts[$i]{operator} eq 'not in' ) {
+                    $parts[ $i - 1 ]{object} =
+                        $parts[ $i + 1 ]{object} . '.indexOf( ' . $parts[ $i - 1 ]{object} . ' )';
                     $parts[$i]{operator}     = '==';
                     $parts[ $i + 1 ]{object} = -1;
                 }
                 elsif ( $parts[$i]{operator} eq 'begins' ) {
+                    $parts[ $i - 1 ]{object} =
+                        $parts[ $i - 1 ]{object} . '.indexOf( ' . $parts[ $i + 1 ]{object} . ' )';
                     $parts[$i]{operator}     = '==';
                     $parts[ $i + 1 ]{object} = 0;
                 }
                 elsif ( $parts[$i]{operator} eq 'not begins' ) {
+                    $parts[ $i - 1 ]{object} =
+                        $parts[ $i - 1 ]{object} . '.indexOf( ' . $parts[ $i + 1 ]{object} . ' )';
                     $parts[$i]{operator}     = '!=';
                     $parts[ $i + 1 ]{object} = 0;
                 }
