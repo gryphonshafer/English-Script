@@ -169,8 +169,11 @@ package English::Script {
                 | <error>
 
             number :
-                /(?:\d+,)*(?:\d+\.)*\d+\b/
-                { $item[1] =~ s/[^\d\.]//g; +{@item} }
+                /\-?(?:\d+,)*(?:\d+\.)*\d+\b/
+                {
+                    $item[1] =~ s/[^\d\.\-]//g;
+                    +{@item};
+                }
                 | <error>
 
             word :
