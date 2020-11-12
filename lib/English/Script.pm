@@ -618,8 +618,8 @@ __END__
 =begin :badges
 
 =for markdown
-[![Build Status](https://travis-ci.org/gryphonshafer/English-Script.svg)](https://travis-ci.org/gryphonshafer/English-Script)
-[![Coverage Status](https://coveralls.io/repos/gryphonshafer/English-Script/badge.png)](https://coveralls.io/r/gryphonshafer/English-Script)
+[![build](https://github.com/gryphonshafer/English-Script/workflows/build/badge.svg)](https://github.com/gryphonshafer/English-Script/actions?query=workflow%3Abuild)
+[![codecov](https://codecov.io/gh/gryphonshafer/English-Script/graph/badge.svg)](https://codecov.io/gh/gryphonshafer/English-Script)
 
 =end :badges
 
@@ -978,8 +978,8 @@ You can also look for additional information at:
 =for :list
 * L<GitHub|https://github.com/gryphonshafer/English-Script>
 * L<MetaCPAN|https://metacpan.org/pod/English::Script>
-* L<Travis CI|https://travis-ci.org/gryphonshafer/English-Script>
-* L<Coveralls|https://coveralls.io/r/gryphonshafer/English-Script>
+* L<GitHub Actions|https://github.com/gryphonshafer/English-Script/actions>
+* L<Codecov|https://codecov.io/gh/gryphonshafer/English-Script>
 * L<CPANTS|http://cpants.cpanauthors.org/dist/English-Script>
 * L<CPAN Testers|http://www.cpantesters.org/distro/D/English-Script.html>
 
