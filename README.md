@@ -4,10 +4,10 @@ English::Script - Parse English subset and convert to data or code
 
 # VERSION
 
-version 1.02
+version 1.03
 
-[![Build Status](https://travis-ci.org/gryphonshafer/English-Script.svg)](https://travis-ci.org/gryphonshafer/English-Script)
-[![Coverage Status](https://coveralls.io/repos/gryphonshafer/English-Script/badge.png)](https://coveralls.io/r/gryphonshafer/English-Script)
+[![build](https://github.com/gryphonshafer/English-Script/workflows/build/badge.svg)](https://github.com/gryphonshafer/English-Script/actions?query=workflow%3Abuild)
+[![codecov](https://codecov.io/gh/gryphonshafer/English-Script/graph/badge.svg)](https://codecov.io/gh/gryphonshafer/English-Script)
 
 # SYNOPSIS
 
@@ -360,8 +360,8 @@ You can also look for additional information at:
 
 - [GitHub](https://github.com/gryphonshafer/English-Script)
 - [MetaCPAN](https://metacpan.org/pod/English::Script)
-- [Travis CI](https://travis-ci.org/gryphonshafer/English-Script)
-- [Coveralls](https://coveralls.io/r/gryphonshafer/English-Script)
+- [GitHub Actions](https://github.com/gryphonshafer/English-Script/actions)
+- [Codecov](https://codecov.io/gh/gryphonshafer/English-Script)
 - [CPANTS](http://cpants.cpanauthors.org/dist/English-Script)
 - [CPAN Testers](http://www.cpantesters.org/distro/D/English-Script.html)
 
@@ -371,7 +371,7 @@ Gryphon Shafer <gryphon@cpan.org>
 
 # COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2020 by Gryphon Shafer.
+This software is copyright (c) 2021 by Gryphon Shafer.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
