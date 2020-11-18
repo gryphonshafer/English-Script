@@ -6,7 +6,7 @@ English::Script - Parse English subset and convert to data or code
 
 version 1.03
 
-[![build](https://github.com/gryphonshafer/English-Script/workflows/build/badge.svg)](https://github.com/gryphonshafer/English-Script/actions?query=workflow%3Abuild)
+[![test](https://github.com/gryphonshafer/English-Script/workflows/test/badge.svg)](https://github.com/gryphonshafer/English-Script/actions?query=workflow%3Atest)
 [![codecov](https://codecov.io/gh/gryphonshafer/English-Script/graph/badge.svg)](https://codecov.io/gh/gryphonshafer/English-Script)
 
 # SYNOPSIS
