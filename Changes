@@ -1,6 +1,7 @@
 Revision history for English::Script
 
 {{$NEXT}}
+        - Compile "otherwise, if" into an "else if"
         - Fix for JS object definition syntax
         - License migrate to Artistic 2.0
         - Migrate Travis CI and Coveralls to GitHub Actions and Codecov

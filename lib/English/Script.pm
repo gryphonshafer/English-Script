@@ -35,7 +35,10 @@ package English::Script {
                 | <error>
 
             command :
-                ( say | set | append | add | subtract | multiply | divide | if | otherwise | for )
+                (
+                    say | set | append | add | subtract | multiply | divide |
+                    otherwise_if | if | otherwise | for
+                )
                 { +{@item} }
                 | <error>
 
@@ -65,6 +68,10 @@ package English::Script {
 
             divide : /\bdivide\b/ object '~' expression
                 { +{ $item[0] => [ $item[2], $item[4] ] } }
+                | <error>
+
+            otherwise_if : /\botherwise,\s*if\b/ expression '::' ( block | command )
+                { +{ $item[0] => { %{ $item[2] }, %{ $item[4] } } } }
                 | <error>
 
             if : /\bif\b/ expression '::' ( block | command )
@@ -474,11 +481,19 @@ package English::Script::JavaScript {
                 $self->object( $tree->[0]{object} ), '/=', $self->expression( $tree->[1]{expression} ),
             ) . ";\n";
         }
+        elsif ( $command_name eq 'otherwise_if' ) {
+            return 'else if ( ' .
+                join( ' ', $self->expression( $tree->{expression} ) ) . " ) {\n" . join( ' ', (
+                    ( exists $tree->{command} ) ? $self->command( $tree->{command} ) :
+                    ( exists $tree->{block}   ) ? $self->block( $tree->{block}     ) : ''
+                ) ) . "}\n";
+        }
         elsif ( $command_name eq 'if' ) {
-            return 'if ( ' . join( ' ', $self->expression( $tree->{expression} ) ) . " ) {\n" . join( ' ', (
-                ( exists $tree->{command} ) ? $self->command( $tree->{command} ) :
-                ( exists $tree->{block}   ) ? $self->block( $tree->{block}     ) : ''
-            ) ) . "}\n";
+            return 'if ( ' .
+                join( ' ', $self->expression( $tree->{expression} ) ) . " ) {\n" . join( ' ', (
+                    ( exists $tree->{command} ) ? $self->command( $tree->{command} ) :
+                    ( exists $tree->{block}   ) ? $self->block( $tree->{block}     ) : ''
+                ) ) . "}\n";
         }
         elsif ( $command_name eq 'otherwise' ) {
             return "else {\n" . join( ' ', (
@@ -575,7 +590,9 @@ package English::Script::JavaScript {
 
                 if ($contains_non_number) {
                     for ( my $i = 0; $i < @parts; $i++ ) {
-                        $self->{objects}{ join( '.', @parts[ 0 .. $i ] ) } //= ( $i == @parts - 1 ) ? '' : '{}';
+                        $self->{objects}{
+                            join( '.', @parts[ 0 .. $i ] )
+                        } //= ( $i == @parts - 1 ) ? '' : '{}';
                     }
                 }
             }
