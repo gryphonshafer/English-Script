@@ -396,8 +396,8 @@ package English::Script::JavaScript {
 
         return join( "\n", (
             map {
-                'if ( typeof( ' . $_ . ' ) == "undefined" ) var ' . $_ .
-                    ( ( $self->{objects}{$_} ) ? ' = ' . $self->{objects}{$_} : '' ) . ';'
+                'if ( typeof( ' . $_ . ' ) == "undefined" ) ' . ( (/\./) ? '' : 'var ' ) . $_ .
+                    ( ( $self->{objects}{$_} ) ? ' = ' . $self->{objects}{$_} : ' = ""' ) . ';'
             } sort keys %{ $self->{objects} }
         ), $text );
     }
