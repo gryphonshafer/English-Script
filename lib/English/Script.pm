@@ -2,10 +2,8 @@ package English::Script {
     # ABSTRACT: Parse English subset and convert to data or code
 
     use 5.014;
-    use strict;
-    use warnings;
+    use exact;
 
-    use Carp 'croak';
     use Parse::RecDescent;
     use YAML::XS 'Dump';
 
@@ -370,8 +368,7 @@ package English::Script {
 
 package English::Script::JavaScript {
     use 5.014;
-    use strict;
-    use warnings;
+    use exact;
     use JavaScript::Packer;
 
     # VERSION
