@@ -20,7 +20,7 @@ my %WriteMakefileArgs = (
     "JavaScript::Packer" => 0,
     "Parse::RecDescent" => 0,
     "YAML::XS" => 0,
-    "exact" => 0
+    "exact" => "1.14"
   },
   "TEST_REQUIRES" => {
     "File::Spec" => 0,
@@ -31,7 +31,7 @@ my %WriteMakefileArgs = (
     "strict" => 0,
     "warnings" => 0
   },
-  "VERSION" => "1.04",
+  "VERSION" => "1.05",
   "test" => {
     "TESTS" => "t/*.t t/javascript/*.t"
   }
@@ -47,7 +47,7 @@ my %FallbackPrereqs = (
   "Test2::V0" => 0,
   "Test::More" => 0,
   "YAML::XS" => 0,
-  "exact" => 0,
+  "exact" => "1.14",
   "strict" => 0,
   "warnings" => 0
 );
