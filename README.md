@@ -4,7 +4,7 @@ English::Script - Parse English subset and convert to data or code
 
 # VERSION
 
-version 1.05
+version 1.06
 
 [![test](https://github.com/gryphonshafer/English-Script/workflows/test/badge.svg)](https://github.com/gryphonshafer/English-Script/actions?query=workflow%3Atest)
 [![codecov](https://codecov.io/gh/gryphonshafer/English-Script/graph/badge.svg)](https://codecov.io/gh/gryphonshafer/English-Script)
@@ -371,7 +371,7 @@ Gryphon Shafer <gryphon@cpan.org>
 
 # COPYRIGHT AND LICENSE
 
-This software is Copyright (c) 2020-2021 by Gryphon Shafer.
+This software is Copyright (c) 2020-2050 by Gryphon Shafer.
 
 This is free software, licensed under:
 
